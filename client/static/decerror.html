@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<head>
+  <title>Blind</title>
+  <link href="css/bootstrap-slate.min.css" rel="stylesheet" media="screen">
+  <link href="css/index.css" rel="stylesheet" media="screen">
+</head>
+<body>
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <span class="navbar-brand">Blind</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="row">
+      <div id="alert" class="alert alert-danger col-sm-7 col-sm-offset-1" role="alert">
+        <strong>Error:</strong> Could not decrypt the file; may not be an encrypted file or a valid key
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-4 col-sm-offset-1">
+        <button id="goBack" class="btn btn-default">
+          <span class="glyphicon glyphicon-chevron-left"></span>&nbsp; Back
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script language="javascript">
+    'use strict';
+
+    $('#goBack').on('click', function () {
+      history.back();
+    });
+  </script>
+</body>
+</html>

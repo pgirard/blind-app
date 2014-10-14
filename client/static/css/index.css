@@ -1,0 +1,16 @@
+body > .container {
+  margin-top: 70px;
+}
+
+.form-horizontal {
+  margin-top: 20px;
+}
+
+input.form-control {
+  background-color: rgb(220, 220, 220);
+}
+
+#uploadFile {
+  margin-top: 8px;
+  color: rgb(200, 200, 200);
+}
