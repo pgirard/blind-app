@@ -9,16 +9,16 @@ var router = express.Router();
 router.post('/random', function (req, res) {
   var length = parseFloat(req.body.length);
 
-  if (!isNumber(length) || !isInteger(length) || !inRange(length, 1, blind.maxRandomLength)) {
-    res.status(500).send('Length must be an integer between 1 and ' + blind.maxRandomLength);
+  if (!isNumber(length) || !isInteger(length) || !inRange(length, 8, blind.maxRandomLength)) {
+    res.status(500).send('Length must be an integer between 8 and ' + blind.maxRandomLength);
   }
   else {
-    try {
-      res.send({ value: blind.random(length) });
-    }
-    catch (err) {
-      res.status(500).send('Could not generate a random value');
-    }
+    blind.random(length).then(function (result) {
+      res.send({ value: result });
+    })
+    .catch(function () {
+       res.status(500).send('Could not generate a random value');
+    });
   }
 });
 
