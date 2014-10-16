@@ -3,18 +3,19 @@
 var express = require('express');
 
 var blind = require('../../lib/blind').create();
+var is = require('../../lib/is');
 
 var router = express.Router();
 
 router.post('/random', function (req, res) {
   var length = parseFloat(req.body.length);
 
-  if (!isNumber(length) || !isInteger(length) || !inRange(length, 8, blind.maxRandomLength)) {
+  if (!is.number(length) || !is.integer(length) || !is.inRange(length, 8, blind.maxRandomLength)) {
     res.status(500).send('Length must be an integer between 8 and ' + blind.maxRandomLength);
   }
   else {
-    blind.random(length).then(function (result) {
-      res.send({ value: result });
+    blind.random(length).then(function (value) {
+      res.send({ value: value });
     })
     .catch(function () {
        res.status(500).send('Could not generate a random value');
@@ -23,79 +24,72 @@ router.post('/random', function (req, res) {
 });
 
 router.post('/encrypt', function (req, res) {
-  if (!isString(req.body.data) || !req.body.data.length) {
+  var data = req.body.data;
+  var key = req.body.key;
+
+  if (!data) {
     res.status(500).send('Data must be a string of one or more characters');
   }
-  else if (!isString(req.body.key) || !req.body.key.length) {
+  else if (!key) {
     res.status(500).send('Key must a string of one or more characters');
   }
+  else if (!is.encodedBinary(key, blind.binaryEncoding)) {
+    res.status(500).send('Key must be a ' + blind.binaryEncoding + ' encoded binary value');
+  }
   else {
-    try {
-      res.send({ value: blind.encrypt(req.body.data, req.body.key) });
-    }
-    catch (err) {
+    blind.encrypt(data, key).then(function (value) {
+      res.send({ value: value });
+    })
+    .catch(function (error) {
       res.status(500).send('Could not encrypt the data');
-    }
+    });
   }
 });
 
 router.post('/decrypt', function (req, res) {
-  if (!isString(req.body.encrypted) || !req.body.encrypted.length) {
+  var encrypted = req.body.encrypted;
+  var key = req.body.key;
+
+  if (!encrypted) {
     res.status(500).send('Encrypted must be a string of one or more characters');
   }
-  else if (!isString(req.body.key) || !req.body.key.length) {
+  else if (!is.encodedBinary(encrypted, blind.binaryEncoding)) {
+    res.status(500).send('Encrypted must be a ' + blind.binaryEncoding + ' encoded binary value');
+  }
+  else if (!key) {
     res.status(500).send('Key must a string of one or more characters');
   }
+  else if (!is.encodedBinary(key, blind.binaryEncoding)) {
+    res.status(500).send('Key must be a ' + blind.binaryEncoding + ' encoded binary value');
+  }
   else {
-    try {
-      res.send({ value: blind.decrypt(req.body.encrypted, req.body.key) });
-    }
-    catch (err) {
+    blind.decrypt(encrypted, key).then(function (value) {
+      res.send({ value: value });
+    })
+    .catch(function (error) {
       res.status(500).send('Could not decrypt the data; may not be encrypted data or a valid key');
-    }
+    });
   }
 });
 
 router.post('/hash', function (req, res) {
-  if (!isString(req.body.data) || !req.body.data.length) {
+  var data = req.body.data;
+  var salt = req.body.salt;
+
+  if (!data) {
     res.status(500).send('Data must be a string of one or more characters');
   }
-  else if (req.body.salt && (!isString(req.body.salt) || !req.body.salt.length)) {
-    res.status(500).send('Salt must a string of one or more characters');
+  else if (salt && !is.encodedBinary(salt, blind.binaryEncoding)) {
+    res.status(500).send('Salt must be a ' + blind.binaryEncoding + ' encoded binary value');
   }
   else {
-    try {
-      res.send({ value: blind.hash(req.body.data, req.body.salt) });
-    }
-    catch (err) {
+    blind.hash(data, salt).then(function (value) {
+      res.send({ value: value });
+    })
+    .catch(function (error) {
       res.status(500).send('Could not hash the data');
-    }
+    });
   }
 });
 
 module.exports = router;
-
-
-function inRange(v, min, max) {
-  if (min !== 0 && !min) {
-    min = Number.NEGATIVE_INFINITY;
-  }
-
-  if (max !== 0 && !max) {
-    max = Number.POSITIVE_INFINITY;
-  }
-
-  return min <= v && v <= max;
-}
-
-function isInteger(v) {
-  return Math.floor(v) === v;
-}
-
-function isNumber(v) {
-  return typeof v === 'number';
-}
-
-function isString(v) {
-  return typeof v === 'string';
-}

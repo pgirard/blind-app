@@ -1,6 +1,7 @@
 'use strict';
 
 $(function () {
+  var binaryEncoding = 'base64';
 
   var $randomResult = $('#randomResult');
   var $encryptKey = $('#encryptKey');
@@ -15,8 +16,8 @@ $(function () {
   $('#getRandom').on('click', function () {
     var length = parseFloat($('#randomLength').val());
 
-    if (!isNumber(length) || !isInteger(length) || !inRange(length, 1, 128)) {
-      showError('Length must be a whole number between 1 and 128');
+    if (!isNumber(length) || !isInteger(length) || !inRange(length, 8, 128)) {
+      showError('Length must be a whole number between 8 and 128');
       return;
     }
 
@@ -63,6 +64,11 @@ $(function () {
       return;
     }
 
+    if (!isEncodedBinary(key, binaryEncoding)) {
+      showError('Key must be a ' + binaryEncoding + ' encoded binary string');
+      return;
+    }
+
     if (!data) {
       showError('Data must be one or more characters');
       return;
@@ -94,8 +100,18 @@ $(function () {
       return;
     }
 
+    if (!isEncodedBinary(key, binaryEncoding)) {
+      showError('Key must be a ' + binaryEncoding + ' encoded binary string');
+      return;
+    }
+
     if (!encrypted) {
       showError('Encrypted must be one or more characters');
+      return;
+    }
+
+    if (!isEncodedBinary(encrypted, binaryEncoding)) {
+      showError('Encrypted must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
 
@@ -124,6 +140,11 @@ $(function () {
       return;
     }
 
+    if (!isEncodedBinary(key, binaryEncoding)) {
+      showError('Key must be a ' + binaryEncoding + ' encoded binary string');
+      return;
+    }
+
     if (!$uploadFile.val()) {
       showError('Choose a file to encrypt first');
       return;
@@ -138,6 +159,11 @@ $(function () {
 
     if (!key) {
       showError('Key must be one or more characters');
+      return;
+    }
+
+    if (!isEncodedBinary(key, binaryEncoding)) {
+      showError('Key must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
 
@@ -156,6 +182,11 @@ $(function () {
 
     if (!data) {
       showError('Data must be one or more characters');
+      return;
+    }
+
+    if (salt && !isEncodedBinary(salt, binaryEncoding)) {
+      showError('Salt must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
 
@@ -192,8 +223,17 @@ $(function () {
     return Math.floor(v) === v;
   }
 
+  function isEncodedBinary(v, encoding) {
+    switch (encoding) {
+      case 'base64':
+        return /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/.test(v);
+      case 'hex':
+        return /^[A-Da-d0-9]+$/.test(v);
+    }
+  }
+
   function isNumber(v) {
-    return typeof v === 'number';
+    return v === v && typeof v === 'number';
   }
 
   function isString(v) {

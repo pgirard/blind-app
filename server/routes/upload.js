@@ -3,6 +3,7 @@
 var express = require('express');
 
 var blind = require('../../lib/blind').create();
+var is = require('../../lib/is');
 
 var router = express.Router();
 
@@ -19,33 +20,36 @@ router.post('/', function (req, res) {
     return;
   }
 
+  if (!is.encodedBinary(key, blind.binaryEncoding)) {
+    res.status(500).send('Encryption key must be a ' + blind.binaryEncoding + ' encoded binary value');
+    return;
+  }
+
   var name = req.files[0].name;
   var data = req.files[0].data;
 
   if (req.body.uploadType === 'encrypt') {
-    try {
-      data = blind.encrypt(data, key);
+    blind.encrypt(data, key).then(function (value) {
       res.type('text/plain');
       res.set('Content-Disposition', 'attachment; filename="' + name + '.enc"');
-      res.send(data);
-    }
-    catch (err) {
+      res.send(value);
+    })
+    .catch(function (error) {
       res.redirect('/encerror.html');
-    }
+    });
   }
   else {
-    try {
-      data = blind.decrypt(data, key);
-      var re = /\.enc$/;
-      name = re.test(name) ? name.replace(re, '') : name + '.dec';
+    var re = /\.enc$/;
+    name = re.test(name) ? name.replace(re, '') : name + '.dec';
 
+    blind.decrypt(data, key).then(function (value) {
       res.type('text/plain');
       res.set('Content-Disposition', 'attachment; filename="' + name + '"');
-      res.send(data);
-    }
-    catch (err) {
+      res.send(value);
+    })
+    .catch(function (error) {
       res.redirect('/decerror.html');
-    }
+    });
   }
 });
 
