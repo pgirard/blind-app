@@ -1,15 +1,31 @@
 {
-  "name": "encryption-web-app",
-  "version": "0.0.0",
-  "description": "Encryption Tools Web App",
+  "name": "blind-app",
+  "version": "0.1.0",
+  "description": "web application demonstrating encryption and hashing with blind",
   "main": "index.js",
   "scripts": {
     "dev": "node monitor",
     "start": "node index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "random",
+    "encryption",
+    "encrypt",
+    "decrypt",
+    "hashing",
+    "hash"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pgirard/blind-app.git"
+  },
+  "author": {
+    "name": "Peter Girard",
+    "email": "pgirard@appgeo.com",
+    "url": "http://www.appgeo.com"
+  },
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "express": "~4.9.7",

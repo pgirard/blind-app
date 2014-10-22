@@ -8,25 +8,25 @@ var is = require('../../lib/is');
 var router = express.Router();
 
 router.post('/', function (req, res) {
-  if (!req.files.length) {
-    res.status(500).send('No file uploaded');
+  if (!Object.keys(req.files).length) {
+    res.redirect('/error.html?e=1');
     return;
   }
 
   var key = req.body.encryptKey;
 
   if (!key) {
-    res.status(500).send('No encryption key provided');
+    res.redirect('/error.html?e=2');
     return;
   }
 
   if (!is.encodedBinary(key, blind.binaryEncoding)) {
-    res.status(500).send('Encryption key must be a ' + blind.binaryEncoding + ' encoded binary value');
+    res.redirect('/error.html?e=3');
     return;
   }
 
-  var name = req.files[0].name;
-  var data = req.files[0].data;
+  var name = req.files.uploadFile.name;
+  var data = req.files.uploadFile.data;
 
   if (req.body.uploadType === 'encrypt') {
     blind.encrypt(data, key).then(function (value) {
@@ -35,7 +35,7 @@ router.post('/', function (req, res) {
       res.send(value);
     })
     .catch(function (error) {
-      res.redirect('/encerror.html');
+      res.redirect('/error.html?e=4');
     });
   }
   else {
@@ -48,7 +48,7 @@ router.post('/', function (req, res) {
       res.send(value);
     })
     .catch(function (error) {
-      res.redirect('/decerror.html');
+      res.redirect('/error.html?e=5');
     });
   }
 });

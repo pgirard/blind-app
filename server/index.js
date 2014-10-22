@@ -19,6 +19,7 @@ server.use(compress());
 server.use(bodyParser.urlencoded({ extended: true }));
 server.use(bodyParser.json());
 server.use(express.static(path.resolve(__dirname, '../client/static')));
+server.use('/bower_components', express.static(path.resolve(__dirname, '../client/bower_components')));
 server.use(upload);
 
 server.use('/', routes);

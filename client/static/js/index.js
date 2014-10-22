@@ -236,10 +236,6 @@ $(function () {
     return v === v && typeof v === 'number';
   }
 
-  function isString(v) {
-    return typeof v === 'string';
-  }
-
   function selectContent($input) {
     $input.focus().prop('selectionStart', 0).prop('selectionLength', $input.val().length);
   }

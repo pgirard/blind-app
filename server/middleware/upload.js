@@ -8,7 +8,7 @@ module.exports = function (req, res, next) {
     return next();
   }
 
-  req.files = [];
+  req.files = {};
   req.body = req.body || {};
 
   var busboy = new Busboy({ headers: req.headers });
@@ -21,12 +21,11 @@ module.exports = function (req, res, next) {
     });
 
     stream.on('end', function () {
-      req.files.push({
-        field: field,
+      req.files[field] = {
         name: name,
         data: data,
         mimeType: mimeType
-      });
+      };
     });
   });
 
