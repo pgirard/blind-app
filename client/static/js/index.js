@@ -16,7 +16,7 @@ $(function () {
   $('#getRandom').on('click', function () {
     var length = parseFloat($('#randomLength').val());
 
-    if (!isNumber(length) || !isInteger(length) || !inRange(length, 8, 128)) {
+    if (!is.number(length) || !is.int(length) || !is.within(length, 8, 128)) {
       showError('Length must be a whole number between 8 and 128');
       return;
     }
@@ -64,7 +64,7 @@ $(function () {
       return;
     }
 
-    if (!isEncodedBinary(key, binaryEncoding)) {
+    if (!is[binaryEncoding](key)) {
       showError('Key must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
@@ -100,7 +100,7 @@ $(function () {
       return;
     }
 
-    if (!isEncodedBinary(key, binaryEncoding)) {
+    if (!is[binaryEncoding](key)) {
       showError('Key must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
@@ -110,7 +110,7 @@ $(function () {
       return;
     }
 
-    if (!isEncodedBinary(encrypted, binaryEncoding)) {
+    if (!is[binaryEncoding](encrypted)) {
       showError('Encrypted must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
@@ -140,7 +140,7 @@ $(function () {
       return;
     }
 
-    if (!isEncodedBinary(key, binaryEncoding)) {
+    if (!is[binaryEncoding](key)) {
       showError('Key must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
@@ -162,7 +162,7 @@ $(function () {
       return;
     }
 
-    if (!isEncodedBinary(key, binaryEncoding)) {
+    if (!is[binaryEncoding](key)) {
       showError('Key must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
@@ -185,7 +185,7 @@ $(function () {
       return;
     }
 
-    if (salt && !isEncodedBinary(salt, binaryEncoding)) {
+    if (salt && !is[binaryEncoding](salt)) {
       showError('Salt must be a ' + binaryEncoding + ' encoded binary string');
       return;
     }
@@ -207,34 +207,27 @@ $(function () {
     });
   });
 
-  function inRange(v, min, max) {
-    if (min !== 0 && !min) {
-      min = Number.NEGATIVE_INFINITY;
+  var is = {
+    base64: function (v) {
+      return /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/.test(v);
+    },
+
+    int: function (v) {
+      return Math.floor(v) === v;
+    },
+
+    hex: function (v) {
+      return /^[A-Da-d0-9]+$/.test(v);
+    },
+
+    number: function (v) {
+      return v === v && typeof v === 'number';
+    },
+
+    within: function (v, min, max) {
+      return min <= v && v <= max;
     }
-
-    if (max !== 0 && !max) {
-      max = Number.POSITIVE_INFINITY;
-    }
-
-    return min <= v && v <= max;
-  }
-
-  function isInteger(v) {
-    return Math.floor(v) === v;
-  }
-
-  function isEncodedBinary(v, encoding) {
-    switch (encoding) {
-      case 'base64':
-        return /^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{4}|[A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)$/.test(v);
-      case 'hex':
-        return /^[A-Da-d0-9]+$/.test(v);
-    }
-  }
-
-  function isNumber(v) {
-    return v === v && typeof v === 'number';
-  }
+  };
 
   function selectContent($input) {
     $input.focus().prop('selectionStart', 0).prop('selectionLength', $input.val().length);
