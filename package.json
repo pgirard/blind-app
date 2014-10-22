@@ -33,7 +33,9 @@
     "compression": "~1.1.0",
     "body-parser": "~1.9.0",
     "busboy": "~0.2.9",
-    "bluebird": "~2.3.5"
+    "bluebird": "~2.3.5",
+    "blind": "~0.1.1",
+    "is": "~2.1.0"
   },
   "devDependencies": {
     "nodemon": "~1.2.1"

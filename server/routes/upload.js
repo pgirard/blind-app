@@ -2,8 +2,8 @@
 
 var express = require('express');
 
-var blind = require('../../lib/blind').create();
-var is = require('../../lib/is');
+var blind = require('blind').create();
+var is = require('is');
 
 var router = express.Router();
 
@@ -20,7 +20,7 @@ router.post('/', function (req, res) {
     return;
   }
 
-  if (!is.encodedBinary(key, blind.binaryEncoding)) {
+  if (!is[blind.binaryEncoding](key)) {
     res.redirect('/error.html?e=3');
     return;
   }
