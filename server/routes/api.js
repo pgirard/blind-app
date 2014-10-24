@@ -2,7 +2,7 @@
 
 var express = require('express');
 
-var blind = require('blind').create();
+var blind = require('blind')();
 var is = require('is');
 
 var router = express.Router();
@@ -14,12 +14,12 @@ router.post('/random', function (req, res) {
     res.status(500).send('Length must be an integer between 8 and ' + blind.maxRandomLength);
   }
   else {
-    blind.random(length).then(function (value) {
-      res.send({ value: value });
-    })
-    .catch(function () {
-       res.status(500).send('Could not generate a random value');
-    });
+    try {
+      res.send({ value: blind.random(length) });
+    }
+    catch (error) {
+      res.status(500).send('Could not generate a random value');
+    }
   }
 });
 
@@ -37,12 +37,12 @@ router.post('/encrypt', function (req, res) {
     res.status(500).send('Key must be a ' + blind.binaryEncoding + ' encoded binary value');
   }
   else {
-    blind.encrypt(data, key).then(function (value) {
-      res.send({ value: value });
-    })
-    .catch(function (error) {
+    try {
+      res.send({ value: blind.encrypt(data, key) });
+    }
+    catch (error) {
       res.status(500).send('Could not encrypt the data');
-    });
+    }
   }
 });
 
@@ -63,12 +63,12 @@ router.post('/decrypt', function (req, res) {
     res.status(500).send('Key must be a ' + blind.binaryEncoding + ' encoded binary value');
   }
   else {
-    blind.decrypt(encrypted, key).then(function (value) {
-      res.send({ value: value });
-    })
-    .catch(function (error) {
+    try {
+      res.send({ value: blind.decrypt(encrypted, key) });
+    }
+    catch (error) {
       res.status(500).send('Could not decrypt the data; may not be encrypted data or a valid key');
-    });
+    }
   }
 });
 
@@ -83,11 +83,13 @@ router.post('/hash', function (req, res) {
     res.status(500).send('Salt must be a ' + blind.binaryEncoding + ' encoded binary value');
   }
   else {
-    blind.hash(data, salt).then(function (value) {
-      res.send({ value: value });
-    })
-    .catch(function (error) {
-      res.status(500).send('Could not hash the data');
+    blind.hash(data, salt, function (err, value) {
+      if (!err) {
+        res.send({ value: value });
+      }
+      else {
+        res.status(500).send('Could not hash the data');
+      }
     });
   }
 });

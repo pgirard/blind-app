@@ -2,7 +2,7 @@
 
 var express = require('express');
 
-var blind = require('blind').create();
+var blind = require('blind')();
 var is = require('is');
 
 var router = express.Router();
@@ -27,29 +27,32 @@ router.post('/', function (req, res) {
 
   var name = req.files.uploadFile.name;
   var data = req.files.uploadFile.data;
+  var value;
 
   if (req.body.uploadType === 'encrypt') {
-    blind.encrypt(data, key).then(function (value) {
+    try {
+      value = blind.encrypt(data, key);
       res.type('text/plain');
       res.set('Content-Disposition', 'attachment; filename="' + name + '.enc"');
       res.send(value);
-    })
-    .catch(function (error) {
+    }
+    catch (error) {
       res.redirect('/error.html?e=4');
-    });
+    }
   }
   else {
     var re = /\.enc$/;
     name = re.test(name) ? name.replace(re, '') : name + '.dec';
 
-    blind.decrypt(data, key).then(function (value) {
+    try {
+      value = blind.decrypt(data, key);
       res.type('text/plain');
       res.set('Content-Disposition', 'attachment; filename="' + name + '"');
       res.send(value);
-    })
-    .catch(function (error) {
+    }
+    catch (error) {
       res.redirect('/error.html?e=5');
-    });
+    }
   }
 });
 
