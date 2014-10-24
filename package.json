@@ -1,6 +1,6 @@
 {
   "name": "blind-app",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "demonstration and utility web application for blind",
   "main": "index.js",
   "scripts": {
