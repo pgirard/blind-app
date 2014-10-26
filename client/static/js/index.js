@@ -1,6 +1,8 @@
 'use strict';
 
 $(function () {
+  $.cookie.json = true;
+
   var binaryEncoding = 'base64';
 
   var $randomResult = $('#randomResult');
@@ -205,6 +207,39 @@ $(function () {
     .fail(function (xhr, err, message) {
       showError(xhr.responseText);
     });
+  });
+
+  $('#saveOptions').on('click', function () {
+    var numRegex = /^\d+$/;
+    var v = $('#hashRounds').val();
+
+    if (!numRegex.test(v) || parseInt(v, 10) < 1) {
+      showError('hash rounds must be an integer greater than zero');
+      return;
+    }
+
+    v = $('#maxDataLength').val();
+
+    if (!numRegex.test(v) || parseInt(v, 10) < 1) {
+      showError('max data length must be an integer greater than zero');
+      return;
+    }
+
+    v = $('#maxRandomLength').val();
+
+    if (!numRegex.test(v) || parseInt(v, 10) < 9) {
+      showError('max random length must be an integer greater than 8');
+      return;
+    }
+
+    var options = {};
+
+    $('#optionsForm .blind-option').each(function () {
+      var $this = $(this);
+      options[$this.attr('id')] = parseInt($this.val(), 10) || $this.val();
+    });
+
+    $.cookie('blind', options, { expires: 180 });
   });
 
   var is = {

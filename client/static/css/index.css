@@ -6,7 +6,7 @@ body > .container {
   margin-top: 20px;
 }
 
-input.form-control {
+input.form-control, select.form-control {
   background-color: rgb(220, 220, 220);
 }
 

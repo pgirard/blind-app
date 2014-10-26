@@ -3,13 +3,10 @@
 'use strict';
 
 var express = require('express');
-
-var api = require('./api');
-var upload = require('./upload');
-
 var router = express.Router();
 
-router.use('/api', api);
-router.use('/upload', upload);
+router.use('/api', require('./api'));
+router.use('/upload', require('./upload'));
+router.use('/', require('./root'));
 
 module.exports = router;

@@ -1,14 +1,13 @@
 'use strict';
 
 var express = require('express');
-
-var blind = require('blind')();
 var is = require('is');
 
 var router = express.Router();
 
 router.post('/random', function (req, res) {
   var length = parseFloat(req.body.length);
+  var blind = req.blind;
 
   if (!is.number(length) || !is.int(length) || !is.within(length, 8, blind.maxRandomLength)) {
     res.status(500).send('Length must be an integer between 8 and ' + blind.maxRandomLength);
@@ -26,6 +25,7 @@ router.post('/random', function (req, res) {
 router.post('/encrypt', function (req, res) {
   var data = req.body.data;
   var key = req.body.key;
+  var blind = req.blind;
 
   if (!data) {
     res.status(500).send('Data must be a string of one or more characters');
@@ -49,6 +49,7 @@ router.post('/encrypt', function (req, res) {
 router.post('/decrypt', function (req, res) {
   var encrypted = req.body.encrypted;
   var key = req.body.key;
+  var blind = req.blind;
 
   if (!encrypted) {
     res.status(500).send('Encrypted must be a string of one or more characters');
@@ -75,6 +76,7 @@ router.post('/decrypt', function (req, res) {
 router.post('/hash', function (req, res) {
   var data = req.body.data;
   var salt = req.body.salt;
+  var blind = req.blind;
 
   if (!data) {
     res.status(500).send('Data must be a string of one or more characters');

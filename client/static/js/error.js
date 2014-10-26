@@ -22,6 +22,7 @@ $(function () {
     case '3': message = 'Encryption key must be a base64 encoded binary value'; break;
     case '4': message = 'Could not encrypt the file'; break;
     case '5': message = 'Could not decrypt the file; may not be an encrypted file or a valid key'; break;
+    case '6': message = 'Invalid option found in cookie'; break;
   }
 
   if (message) {

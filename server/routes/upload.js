@@ -1,8 +1,6 @@
 'use strict';
 
 var express = require('express');
-
-var blind = require('blind')();
 var is = require('is');
 
 var router = express.Router();
@@ -19,6 +17,8 @@ router.post('/', function (req, res) {
     res.redirect('/error.html?e=2');
     return;
   }
+
+  var blind = req.blind;
 
   if (!is[blind.binaryEncoding](key)) {
     res.redirect('/error.html?e=3');

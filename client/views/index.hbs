@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<head>
+  <title>Blind</title>
+  <link href="bower_components/bootswatch/slate/bootstrap.min.css" rel="stylesheet" media="screen">
+  <link href="css/index.css" rel="stylesheet" media="screen">
+</head>
+<body>
+  <div class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <span class="navbar-brand">Blind</span>
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+      </div>
+      <div class="navbar-collapse collapse" id="navbar-main">
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="#random" data-toggle="tab">random</a>
+          </li>
+          <li>
+            <a id="encryptTab" href="#encrypt" data-toggle="tab">encryption</a>
+          </li>
+          <li>
+            <a id="hashTab" href="#hash" data-toggle="tab">hashing</a>
+          </li>
+          <li>
+            <a href="#options" data-toggle="tab">options</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="tab-content">
+      <div class="tab-pane fade in active" id="random">
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="randomLength" class="col-sm-2 control-label">bytes</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control" id="randomLength" value="{{blind.randomLength}}"/><br/>
+              <button type="button" id="getRandom" class="btn btn-default">
+                generate &nbsp;<span class="glyphicon glyphicon-chevron-down"></span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="randomResult" class="col-sm-2 control-label">random</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="randomResult"/><br />
+              <button type="button" id="goEncryption" class="btn btn-default">
+                encryption &nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
+              </button>
+              <button type="button" id="goHashing" class="btn btn-default">
+                hashing &nbsp;<span class="glyphicon glyphicon-chevron-right"></span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="tab-pane fade" id="encrypt">
+        <form id="encryptForm" class="form-horizontal" role="form" method="post" action="/upload" enctype="multipart/form-data">
+          <div class="form-group">
+            <label for="encryptKey" class="col-sm-2 control-label">key</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" name="encryptKey" id="encryptKey"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="plainTextData" class="col-sm-2 control-label">data</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="plainTextData"/><br />
+              <button type="button" id="getEncrypted" class="btn btn-default">
+                encrypt &nbsp;<span class="glyphicon glyphicon-chevron-down"></span>
+              </button>
+              <button type="button" id="getDecrypted" class="btn btn-default">
+                decrypt &nbsp;<span class="glyphicon glyphicon-chevron-up"></span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="encryptedData" class="col-sm-2 control-label">encrypted</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="encryptedData"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 col-md-offset-1">
+              <hr />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="uploadFile" class="col-sm-2 control-label">file</label>
+            <div class="col-sm-9">
+              <input id="uploadFile" type="file" name="uploadFile" /></br />
+              <button type="button" id="encryptFile" class="btn btn-default">encrypt</button>
+              <button type="button" id="decryptFile" class="btn btn-default">decrypt</button>
+            </div>
+          </div>
+          <input type="hidden" name="uploadType" id="uploadType" />
+        </form>
+      </div>
+      <div class="tab-pane fade" id="hash">
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="hashSalt" class="col-sm-2 control-label">salt</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="hashSalt"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hashData" class="col-sm-2 control-label">data</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="hashData" /><br/>
+              <button type="button" id="getHashed" class="btn btn-default">
+                hash &nbsp;<span class="glyphicon glyphicon-chevron-down"></span>
+              </button>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hashResult" class="col-sm-2 control-label">hashed</label>
+            <div class="col-sm-9">
+              <input type="text" class="form-control" id="hashResult" />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="tab-pane fade" id="options">
+        <form class="form-horizontal" role="form" id="optionsForm">
+          <div class="form-group">
+            <label for="binaryEncoding" class="col-sm-3 control-label">binary encoding</label>
+            <div class="col-sm-2">
+              <select class="form-control blind-option" id="binaryEncoding">
+                {{#each binaryEncodings}}
+                  <option {{#if selected}}selected="selected"{{/if}} value="{{name}}">{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="encryptAlgorithm" class="col-sm-3 control-label">encrypt algorithm</label>
+            <div class="col-sm-3">
+              <select class="form-control blind-option" id="encryptAlgorithm">
+                {{#each encryptAlgorithms}}
+                  <option {{#if selected}}selected="selected"{{/if}} value="{{name}}">{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hashAlgorithm" class="col-sm-3 control-label">hash algorithm</label>
+            <div class="col-sm-3">
+              <select class="form-control blind-option" id="hashAlgorithm">
+                {{#each hashAlgorithms}}
+                  <option {{#if selected}}selected="selected"{{/if}} value="{{name}}">{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="hashRounds" class="col-sm-3 control-label">hash rounds</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control blind-option" id="hashRounds" value="{{blind.hashRounds}}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="maxDataLength" class="col-sm-3 control-label">max data length</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control blind-option" id="maxDataLength" value="{{blind.maxDataLength}}" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="maxRandomLength" class="col-sm-3 control-label">max random length</label>
+            <div class="col-sm-2">
+              <input type="text" class="form-control blind-option" id="maxRandomLength" value="{{blind.maxRandomLength}}" /><br/>
+              <button type="button" id="saveOptions" class="btn btn-default">save</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="alert" class="alert alert-danger col-sm-7 col-sm-offset-3" style="display: none" role="alert">>
+    </div>
+  </div>
+
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/jquery-cookie/jquery.cookie.js"></script>
+  <script src="js/index.js"></script>
+</body>
+</html>
