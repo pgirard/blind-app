@@ -13,5 +13,4 @@ demonstration and utility web application for [blind](https://github.com/pgirard
  * results automatically selected for easy copy/paste
 
 ## plans
- * settings tab to change from blind defaults
  * host at https://blind.appgeo.com
