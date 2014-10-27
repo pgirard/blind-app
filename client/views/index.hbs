@@ -33,6 +33,11 @@
           <li>
             <a href="#options" data-toggle="tab">options</a>
           </li>
+          <li>&nbsp;&nbsp;&nbsp;&nbsp;</li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="https://www.npmjs.org/package/blind" target="_blank">npm</a></li>
+          <li><a href="https://github.com/pgirard/blind" target="_blank">github</a></li>
         </ul>
       </div>
     </div>
@@ -136,7 +141,7 @@
         <form class="form-horizontal" role="form" id="optionsForm">
           <div class="form-group">
             <label for="binaryEncoding" class="col-sm-3 control-label">binary encoding</label>
-            <div class="col-sm-2">
+            <div class="col-sm-4">
               <select class="form-control blind-option" id="binaryEncoding">
                 {{#each binaryEncodings}}
                   <option {{#if selected}}selected="selected"{{/if}} value="{{name}}">{{name}}</option>
@@ -146,7 +151,7 @@
           </div>
           <div class="form-group">
             <label for="encryptAlgorithm" class="col-sm-3 control-label">encrypt algorithm</label>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
               <select class="form-control blind-option" id="encryptAlgorithm">
                 {{#each encryptAlgorithms}}
                   <option {{#if selected}}selected="selected"{{/if}} value="{{name}}">{{name}}</option>
@@ -156,7 +161,7 @@
           </div>
           <div class="form-group">
             <label for="hashAlgorithm" class="col-sm-3 control-label">hash algorithm</label>
-            <div class="col-sm-3">
+            <div class="col-sm-4">
               <select class="form-control blind-option" id="hashAlgorithm">
                 {{#each hashAlgorithms}}
                   <option {{#if selected}}selected="selected"{{/if}} value="{{name}}">{{name}}</option>
